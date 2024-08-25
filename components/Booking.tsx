@@ -54,12 +54,15 @@ const BookingComponent = memo(
         </CardHeader>
         <CardContent className="max-w-fit mx-auto justify-center items-center">
           <section className="border-2 rounded-xl border-slate-200 bg-card-foreground items-center flex flex-col justify-center">
-            <div className="flex flex-row">
+            <div className="flex flex-row ">
               <Calendar
                 mode="single"
                 selected={date}
                 onSelect={setDate}
                 className="text-input"
+                classNames={{
+                  day_selected: "",
+                }}
               />
               <TimePicker />
             </div>

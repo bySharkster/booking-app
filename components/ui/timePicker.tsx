@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import TimeFormatToggle from "./timeFormatToggle";
 import { MIN_TIME_SLOT, MAX_TIME_SLOT, TIME_INTERVAL } from "@/lib/constants";
-const TimePicker: React.FC = ({}) => {
+const TimePicker: React.FC = () => {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const [is24HourFormat, setIs24HourFormat] = useState<boolean>(false);
@@ -33,8 +33,8 @@ const TimePicker: React.FC = ({}) => {
   const timeSlots = generateTimeSlots();
 
   return (
-    <section className="h-72 w-full max-w-80">
-      <div className="flex flex-wrap gap-2 justify-center overflow-y-scroll mt-4 h-5/6 ">
+    <section className="h-72 w-full max-w-80 peer">
+      <div className="flex flex-wrap gap-2 justify-center overflow-y-scroll mt-4 h-5/6 scrollable-content scroll-smooth ">
         <div className="flex flex-wrap gap-2 justify-center shadow-inner p-2">
           {timeSlots.map((time) => (
             <button

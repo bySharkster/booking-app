@@ -174,3 +174,26 @@
 .PhoneInputInput {
   background-color: var(--background);
 }
+
+.scrollable-content {
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #ff9465 #f1f1f1; /* For Firefox */
+}
+
+.scrollable-content::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color of the track */
+  border-radius: 16px; /* Rounded corners for the track */
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+  background: #ff9465; /* Color of the thumb */
+  border-radius: 16px; /* Rounded corners for the thumb */
+}
+
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+  background: #ff9465 80%; /* Color of the thumb on hover */
+}
