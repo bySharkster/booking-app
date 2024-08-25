@@ -16,10 +16,11 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import PhoneNumberInput from "./ui/phoneNumberInput";
 import BookingCard from "./ui/bookingCard";
+import TimePicker from "./ui/timePicker";
+import GoBackButton from "./ui/goBack";
 
 export const Booking = () => {
   const [state, setState] = useState("booking");
-
   const renderComponent = useMemo(() => {
     switch (state) {
       case "details":
@@ -53,12 +54,15 @@ const BookingComponent = memo(
         </CardHeader>
         <CardContent className="max-w-fit mx-auto justify-center items-center">
           <section className="border-2 rounded-xl border-slate-200 bg-card-foreground items-center flex flex-col justify-center">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              className="text-input"
-            />
+            <div className="flex flex-row">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                className="text-input"
+              />
+              <TimePicker />
+            </div>
             <div className="text-center py-2 flex flex-col text-input text-md">
               <span>Dia de Recorte: </span>
               <span>
@@ -76,7 +80,10 @@ const BookingComponent = memo(
             </div>
           </section>
           <div className="w-full flex items-center justify-center py-6">
-            <Button onClick={(e) => handleClick()} className="button">
+            <Button
+              onClick={(e) => handleClick()}
+              className="button scale-95 hover:scale-105 duration-200 ease-in-out flex-1"
+            >
               Details
             </Button>
           </div>
@@ -167,10 +174,11 @@ const DetailsComponent = memo(
             </form>
           </section>
           <div className="w-full flex items-center justify-center py-6">
+            <GoBackButton onClick={() => setState("booking")} />
             <Button
               type="submit"
               onClick={() => setState("confirmation")}
-              className="button"
+              className="button scale-95 hover:scale-105 duration-200 ease-in-out"
             >
               confirmation
             </Button>
