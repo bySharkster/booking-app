@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, memo, useState } from "react";
+import React, { useMemo, memo, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import axios from "axios";
@@ -21,7 +21,7 @@ import GoBackButton from "./ui/goBack";
 
 export const Booking = () => {
   const [state, setState] = useState("booking");
-  const renderComponent = useMemo(() => {
+  const renderComponent = useCallback(() => {
     switch (state) {
       case "details":
         return <DetailsComponent setState={setState} />;
@@ -34,7 +34,7 @@ export const Booking = () => {
     }
   }, [state]);
 
-  return <div className="grid">{renderComponent}</div>;
+  return <div className="grid">{renderComponent()}</div>;
 };
 
 const BookingComponent = memo(
@@ -52,17 +52,14 @@ const BookingComponent = memo(
             Tan facil como presionar un dia en el calendario!
           </CardDescription>
         </CardHeader>
-        <CardContent className="max-w-fit mx-auto justify-center items-center">
+        <CardContent className="max-w-fit mx-auto justify-center items-center px-0 md:px-2">
           <section className="border-2 rounded-xl border-slate-200 bg-card-foreground items-center flex flex-col justify-center">
-            <div className="flex flex-row ">
+            <div className="flex flex-col sm:flex-row ">
               <Calendar
                 mode="single"
                 selected={date}
                 onSelect={setDate}
                 className="text-input"
-                classNames={{
-                  day_selected: "",
-                }}
               />
               <TimePicker />
             </div>

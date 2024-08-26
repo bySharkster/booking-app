@@ -33,9 +33,9 @@ const TimePicker: React.FC = () => {
   const timeSlots = generateTimeSlots();
 
   return (
-    <section className="h-72 w-full max-w-80 peer">
+    <section className="sm:h-72 sm:w-full sm:max-w-80 peer w-72">
       <div className="flex flex-wrap gap-2 justify-center overflow-y-scroll mt-4 h-5/6 scrollable-content scroll-smooth ">
-        <div className="flex flex-wrap gap-2 justify-center shadow-inner p-2">
+        <div className="flex flex-nowrap sm:flex-wrap gap-2 justify-center shadow-inner p-2">
           {timeSlots.map((time) => (
             <button
               key={time}
