@@ -194,17 +194,17 @@ DetailsComponent.displayName = "DetailsComponent";
 const ConfirmationComponent = memo(() => {
   return (
     <BookingCard>
-      <div className="flex items-center justify-between w-full sm:w-4/5 md:max-w-lg mb-4 z-[2] px-4 md:px-1 pt-6 ">
+      <div className="flex items-center justify-between w-full sm:w-4/5 md:max-w-lg max-w-80 mb-4 z-[2] md:px-4 px-1 pt-6 ">
         <div className="text-sm text-muted-foreground">
           <div>Reservation made</div>
           <div>Tomorrow, 10:00 AM</div>
         </div>
-        <div className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-medium">
+        <div className="bg-primary text-primary-foreground md:px-3 p-1 rounded-full text-xs font-medium">
           Confirmed
         </div>
       </div>
-      <div className="text-center z-[2] px-6">
-        <h2 className="text-2xl font-bold mb-2">
+      <div className="text-center z-[2] md:px-6 ">
+        <h2 className="text-xl md:text-2xl font-bold mb-2 ">
           Your reservation is confirmed!
         </h2>
         <p className="text-muted-foreground mb-6">
@@ -231,11 +231,11 @@ const ConfirmationComponent = memo(() => {
           <div className="font-medium">ABC123</div>
         </div>
       </div>
-      <div className="flex justify-between  z-[2] px-6 pb-6 gap-2">
+      <div className="flex justify-center flex-col sm:flex-row w-full z-[2] px-6 pb-6 gap-2">
         <Button
           variant={"default"}
           size={"lg"}
-          className="bg-background hover:bg-background/75 text-foreground hover:text-foreground/75"
+          className="bg-background hover:bg-background/75 text-foreground  hover:text-foreground/75"
         >
           View Details
         </Button>

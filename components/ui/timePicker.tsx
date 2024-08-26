@@ -42,9 +42,9 @@ const TimePicker: React.FC = () => {
               onClick={() => setSelectedTime(time)}
               className={`p-2 items-center  rounded-lg border ${
                 selectedTime === time
-                  ? "bg-background text-foreground "
+                  ? "bg-background text-foreground"
                   : "bg-foreground border-gray-300 text-background"
-              } hover:bg-background/15 transition h-12 w-24 whitespace-nowrap`}
+              } hover:bg-background/90 hover:text-foreground/90 transition h-12 w-24 whitespace-nowrap`}
             >
               {time}
             </button>
