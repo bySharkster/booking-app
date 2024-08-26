@@ -45,7 +45,7 @@ function Calendar({
         ),
         day_range_end: "day-range-end",
         day_selected:
-          "bg-primary-foreground text-primary-foreground hover:bg-primary hover:text-primary focus:bg-primary focus:text-primary",
+          "bg-background text-foreground hover:bg-primary hover:text-primary-foreground focus:bg-background focus:text-foreground",
 
         day_today: "bg-inherit text-inherit",
         day_outside:
