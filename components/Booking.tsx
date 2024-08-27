@@ -16,7 +16,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import PhoneNumberInput from "./ui/phoneNumberInput";
 import BookingCard from "./ui/bookingCard";
-import TimePicker from "./ui/timePicker";
+import { TimePicker } from "./ui/timePicker";
 import GoBackButton from "./ui/goBack";
 
 export const Booking = () => {
@@ -40,6 +40,16 @@ export const Booking = () => {
 const BookingComponent = memo(
   ({ setState }: { setState: (state: string) => void }) => {
     const [date, setDate] = React.useState<Date | undefined>(new Date());
+    const [time, setTime] = React.useState<Date | undefined>(
+      new Date() as Date
+    );
+    const timeString: String =
+      time?.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      }) || "Selecciona una hora";
+
     const handleClick = () => {
       setState("details");
     };
@@ -61,7 +71,7 @@ const BookingComponent = memo(
                 onSelect={setDate}
                 className="text-input"
               />
-              <TimePicker />
+              <TimePicker selected={time} onSelect={setTime} />
             </div>
             <div className="text-center py-2 flex flex-col text-input text-md">
               <span>Dia de Recorte: </span>

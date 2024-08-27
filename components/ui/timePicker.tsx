@@ -1,8 +1,14 @@
 import React, { ReactNode, useState } from "react";
 import TimeFormatToggle from "./timeFormatToggle";
 import { MIN_TIME_SLOT, MAX_TIME_SLOT, TIME_INTERVAL } from "@/lib/constants";
-const TimePicker: React.FC = () => {
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+function TimePicker({
+  selected,
+  onSelect,
+}: {
+  selected: Date | undefined;
+  onSelect: (date: Date) => void;
+}) {
+  const [selectedTime, setSelectedTime] = useState<string | undefined>("");
 
   const [is24HourFormat, setIs24HourFormat] = useState<boolean>(false);
   // Generate time slots in 30-minute intervals
@@ -32,6 +38,14 @@ const TimePicker: React.FC = () => {
 
   const timeSlots = generateTimeSlots();
 
+  const handleSelectTime = (time: string) => {
+    console.log(time);
+    setSelectedTime(time);
+    if (selectedTime) {
+      selected = new Date(selectedTime);
+    }
+    console.log(selected);
+  };
   return (
     <section className="sm:h-72 sm:w-full sm:max-w-80 peer w-72">
       <div className="flex flex-wrap gap-2 justify-center overflow-y-scroll mt-4 h-5/6 scrollable-content scroll-smooth ">
@@ -39,7 +53,7 @@ const TimePicker: React.FC = () => {
           {timeSlots.map((time) => (
             <button
               key={time}
-              onClick={() => setSelectedTime(time)}
+              onClick={() => handleSelectTime(time)}
               className={`p-2 items-center  rounded-lg border ${
                 selectedTime === time
                   ? "bg-background text-foreground"
@@ -54,6 +68,7 @@ const TimePicker: React.FC = () => {
       <TimeFormatToggle onToggle={setIs24HourFormat} />
     </section>
   );
-};
+}
+TimePicker.displayName = "TimePicker";
 
-export default TimePicker;
+export { TimePicker };
