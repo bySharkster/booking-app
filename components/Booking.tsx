@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, memo, useState, useCallback } from "react";
+import { useMemo, memo, useState, useCallback, SetStateAction } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import axios from "axios";
@@ -11,14 +11,12 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import { cn } from "@/lib/utils";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import PhoneNumberInput from "./ui/phoneNumberInput";
 import BookingCard from "./ui/bookingCard";
-import TimePicker from "./ui/timePicker";
+import { TimePicker } from "./ui/timePicker";
 import GoBackButton from "./ui/goBack";
-
 export const Booking = () => {
   const [state, setState] = useState("booking");
   const renderComponent = useCallback(() => {
@@ -39,9 +37,27 @@ export const Booking = () => {
 
 const BookingComponent = memo(
   ({ setState }: { setState: (state: string) => void }) => {
-    const [date, setDate] = React.useState<Date | undefined>(new Date());
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+      new Date()
+    );
+    const [selectedTime, setSelectedTime] = useState<Date | undefined>(
+      new Date()
+    );
     const handleClick = () => {
+      if (!selectedDate && !selectedTime) {
+        console.log("No date selected && No time selected");
+
+        return;
+      }
+      console.log("Selected Date:", selectedDate);
+      console.log(typeof selectedDate);
+      console.log("Selected Time:", selectedTime);
+      console.log(typeof selectedTime);
+
       setState("details");
+    };
+    const handleTimeChange = (time: Date | undefined) => {
+      setSelectedTime(time);
     };
 
     return (
@@ -57,17 +73,17 @@ const BookingComponent = memo(
             <div className="flex flex-col sm:flex-row ">
               <Calendar
                 mode="single"
-                selected={date}
-                onSelect={setDate}
+                selected={selectedDate}
+                onSelect={setSelectedDate}
                 className="text-input"
               />
-              <TimePicker />
+              <TimePicker onTimeSelect={handleTimeChange} />
             </div>
             <div className="text-center py-2 flex flex-col text-input text-md">
               <span>Dia de Recorte: </span>
-              <span>
-                {date
-                  ? date
+              <span className={selectedDate ? `text-2xl` : `text-red-600 `}>
+                {selectedDate
+                  ? selectedDate
                       .toLocaleDateString("es-PR", {
                         weekday: "long",
                         year: "numeric",
@@ -76,6 +92,11 @@ const BookingComponent = memo(
                       })
                       .toUpperCase()
                   : `Selecciona un dia`}
+              </span>
+              <span>
+                {selectedTime
+                  ? selectedTime.toLocaleTimeString()
+                  : `Selecciona una hora`}
               </span>
             </div>
           </section>
