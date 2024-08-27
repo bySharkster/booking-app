@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TimeFormatToggle from "./timeFormatToggle";
 import { MIN_TIME_SLOT, MAX_TIME_SLOT, TIME_INTERVAL } from "@/lib/constants";
 import { DayPicker } from "react-day-picker";
@@ -10,7 +10,7 @@ function TimePicker({
   selected: Date | undefined;
   onSelect: (date: Date) => void;
 }) {
-  const [selectedTime, setSelectedTime] = useState<string | undefined>("");
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const [is24HourFormat, setIs24HourFormat] = useState<boolean>(false);
   // Generate time slots in 30-minute intervals
@@ -40,8 +40,7 @@ function TimePicker({
 
   const timeSlots = generateTimeSlots();
   // TODO: FIX THE TIME PICKER SINCE YOU HAVE TO CLICK TWICE TO SELECT THE TIME
-  const handleSelectTime = (time: string) => {
-    setSelectedTime(time);
+  useEffect(() => {
     if (selectedTime && selected) {
       const [time, period] = selectedTime.split(" ");
       let [hours, minutes] = time.split(":").map(Number);
@@ -64,9 +63,15 @@ function TimePicker({
       }
       onSelect(combinedDateTime);
     } else {
-      console.log("Please select time", time);
+      console.log("Please select time", selectedTime);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTime]);
+
+  const handleSelectTime = (time: string) => {
+    setSelectedTime(time);
   };
+
   return (
     <section className="sm:h-72 sm:w-full sm:max-w-80 peer w-72">
       <div className="flex flex-wrap gap-2 justify-center overflow-y-scroll mt-4 h-5/6 scrollable-content scroll-smooth ">
