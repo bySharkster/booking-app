@@ -18,6 +18,8 @@ import PhoneNumberInput from "./ui/phoneNumberInput";
 import BookingCard from "./ui/bookingCard";
 import { TimePicker } from "./ui/timePicker";
 import GoBackButton from "./ui/goBack";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 export const Booking = () => {
   const [state, setState] = useState("booking");
@@ -40,18 +42,19 @@ export const Booking = () => {
 const BookingComponent = memo(
   ({ setState }: { setState: (state: string) => void }) => {
     const [date, setDate] = React.useState<Date | undefined>(new Date());
-    const [time, setTime] = React.useState<Date | undefined>(
-      new Date() as Date
-    );
-    const timeString: String =
-      time?.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      }) || "Selecciona una hora";
+    const { toast } = useToast();
 
     const handleClick = () => {
+      // TODO - Handle the date
+      // Date Handles correctly fix timePicker component since have to press twice time button to actually select the time
+
+      console.log("Date: ", date);
       setState("details");
+      toast({
+        title: "Scheduled: Catch up ",
+        description: `${date?.toLocaleTimeString()} - ${date?.toLocaleDateString()}`,
+        action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
+      });
     };
 
     return (
@@ -71,7 +74,7 @@ const BookingComponent = memo(
                 onSelect={setDate}
                 className="text-input"
               />
-              <TimePicker selected={time} onSelect={setTime} />
+              <TimePicker selected={date} onSelect={setDate} />
             </div>
             <div className="text-center py-2 flex flex-col text-input text-md">
               <span>Dia de Recorte: </span>

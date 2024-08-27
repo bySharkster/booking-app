@@ -1,6 +1,8 @@
 import React, { ReactNode, useState } from "react";
 import TimeFormatToggle from "./timeFormatToggle";
 import { MIN_TIME_SLOT, MAX_TIME_SLOT, TIME_INTERVAL } from "@/lib/constants";
+import { DayPicker } from "react-day-picker";
+
 function TimePicker({
   selected,
   onSelect,
@@ -37,14 +39,33 @@ function TimePicker({
   };
 
   const timeSlots = generateTimeSlots();
-
+  // TODO: FIX THE TIME PICKER SINCE YOU HAVE TO CLICK TWICE TO SELECT THE TIME
   const handleSelectTime = (time: string) => {
-    console.log(time);
     setSelectedTime(time);
-    if (selectedTime) {
-      selected = new Date(selectedTime);
+    if (selectedTime && selected) {
+      const [time, period] = selectedTime.split(" ");
+      let [hours, minutes] = time.split(":").map(Number);
+
+      // Convert 12-hour format to 24-hour format if necessary
+      if (period) {
+        if (period.toUpperCase() === "PM" && hours !== 12) {
+          hours += 12;
+        } else if (period.toUpperCase() === "AM" && hours === 12) {
+          hours = 0;
+        }
+      }
+
+      // Create a new Date object with the selected date and time
+      const combinedDateTime = new Date(selected);
+      combinedDateTime.setHours(hours, minutes, 0, 0);
+      if (combinedDateTime === null || combinedDateTime <= new Date()) {
+        console.log("Please select a future date and time");
+        return;
+      }
+      onSelect(combinedDateTime);
+    } else {
+      console.log("Please select time", time);
     }
-    console.log(selected);
   };
   return (
     <section className="sm:h-72 sm:w-full sm:max-w-80 peer w-72">
