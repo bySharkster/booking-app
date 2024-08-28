@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   service: 'gmail', // e.g., 'gmail'
   auth: {
-    user: 'barber@gmail.com',
+    user: 'gregor.gr20@gmail.com',  // un email provicional que envie emails a otro email
     pass: 'falm svij kkzl qwoi', // generated password by google example
   },
 });
@@ -12,9 +12,9 @@ export default async function handler(req: { body: { name: any; email: any; phon
     const { name, email, phone, address, corte, silla } = req.body;
 
     const mailOptions = {
-    from: 'from.dev.trip@gmail.com',
-    to: 'from.the.trip@gmail.com',
-    subject: 'You got an order',
+    from: 'gregor.gr20@gmail.com',
+    to: 'fernandoaponte0609@gmail.com',
+    subject: 'A client booked a haircut',
     text: `You got an order from ${name} with email ${email} and additional information ${phone}, ${address}, ${corte}, ${silla}.`,
     };
 
