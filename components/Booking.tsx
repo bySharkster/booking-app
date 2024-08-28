@@ -115,8 +115,7 @@ const DetailsComponent = memo(({ setState }: { setState: (state: string) => void
     silla: 0,
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async() => {
     // Call the emailnotif API using axios
     try {
       await axios.post("/api/Emailnotif", formData);
@@ -135,8 +134,8 @@ const DetailsComponent = memo(({ setState }: { setState: (state: string) => void
         </CardHeader>
         <CardContent className="w-full max-w-fit mx-auto px-1">
           <section className="border-2 rounded-xl border-slate-200 bg-card-foreground items-center flex flex-col justify-center">
-            <form
-              onSubmit={handleSubmit}
+            <div
+              // onSubmit={handleSubmit}
               className="flex flex-col gap-4 h-auto p-4 md:p-10 w-full bg-card-foreground overflow-hidden rounded-xl"
             >
               <div className="flex flex-row items-baseline gap-1 ">
@@ -202,14 +201,17 @@ const DetailsComponent = memo(({ setState }: { setState: (state: string) => void
               <div className="w-full flex items-center justify-center py-6">
                 <GoBackButton onClick={() => setState("booking")} />
                 <Button
-                  type="submit"
-                  // onClick={() => setState("confirmation")}
+                  // type="submit"
+                  onClick={() => {
+                    handleSubmit();
+                    setState("confirmation");
+                  }}
                   className="button scale-95 hover:scale-105 duration-200 ease-in-out"
                 >
                   confirmation
                 </Button>
               </div>
-            </form>
+            </div>
           </section>
         </CardContent>
       </BookingCard>
