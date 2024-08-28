@@ -41,20 +41,35 @@ export const Booking = () => {
 
 const BookingComponent = memo(
   ({ setState }: { setState: (state: string) => void }) => {
-    const [date, setDate] = React.useState<Date | undefined>(new Date());
+    const today = new Date();
+    const tomorrow: Date = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    const [date, setDate] = React.useState<Date | undefined>(tomorrow);
+    const [time, setTime] = React.useState<string | undefined>(undefined);
     const { toast } = useToast();
+
+    const handleSelectTime = (time: string) => {
+      setTime(time);
+    };
 
     const handleClick = () => {
       // TODO - Handle the date
       // Date Handles correctly fix timePicker component since have to press twice time button to actually select the time
-
-      console.log("Date: ", date);
-      setState("details");
-      toast({
-        title: "Scheduled: Catch up ",
-        description: `${date?.toLocaleTimeString()} - ${date?.toLocaleDateString()}`,
-        action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
-      });
+      if (time !== undefined) {
+        setState("details");
+        toast({
+          title: "Scheduled: Catch up ",
+          description: `${date?.toLocaleTimeString()} - ${date?.toLocaleDateString()}`,
+          action: (
+            <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
+          ),
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Please select a time",
+        });
+      }
     };
 
     return (
@@ -74,22 +89,11 @@ const BookingComponent = memo(
                 onSelect={setDate}
                 className="text-input"
               />
-              <TimePicker selected={date} onSelect={setDate} />
-            </div>
-            <div className="text-center py-2 flex flex-col text-input text-md">
-              <span>Dia de Recorte: </span>
-              <span>
-                {date
-                  ? date
-                      .toLocaleDateString("es-PR", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "short",
-                        day: "2-digit",
-                      })
-                      .toUpperCase()
-                  : `Selecciona un dia`}
-              </span>
+              <TimePicker
+                selected={date}
+                onSelect={setDate}
+                onSelectTime={handleSelectTime}
+              />
             </div>
           </section>
           <div className="w-full flex items-center justify-center py-6">

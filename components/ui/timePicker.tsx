@@ -6,9 +6,11 @@ import { DayPicker } from "react-day-picker";
 function TimePicker({
   selected,
   onSelect,
+  onSelectTime,
 }: {
   selected: Date | undefined;
   onSelect: (date: Date) => void;
+  onSelectTime: (time: string) => void;
 }) {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
@@ -70,6 +72,7 @@ function TimePicker({
 
   const handleSelectTime = (time: string) => {
     setSelectedTime(time);
+    onSelectTime(time);
   };
 
   return (
