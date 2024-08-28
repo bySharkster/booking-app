@@ -18,6 +18,16 @@ import PhoneNumberInput from "./ui/phoneNumberInput";
 import BookingCard from "./ui/bookingCard";
 import TimePicker from "./ui/timePicker";
 import GoBackButton from "./ui/goBack";
+import { E164Number } from "libphonenumber-js/core";
+
+type formDataProps = {
+  name: string;
+  email: string;
+  phone: E164Number | undefined;
+  address: string;
+  corte: string;
+  silla: number;
+};
 
 export const Booking = () => {
   const [state, setState] = useState("booking");
@@ -95,22 +105,25 @@ const BookingComponent = memo(
 
 BookingComponent.displayName = "BookingComponent";
 
-const DetailsComponent = memo(
-  ({ setState }: { setState: (state: string) => void }) => {
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      // Call the emailnotif API using axios
-      axios
-        .post("/api/emailnotif")
-        .then((response: { data: any }) => {
-          // Handle the response
-          console.log(response.data);
-        })
-        .catch((error: any) => {
-          // Handle the error
-          console.error(error);
-        });
-    };
+const DetailsComponent = memo(({ setState }: { setState: (state: string) => void }) => {
+  const [formData, setFormData] = useState<formDataProps>({
+    name: "",
+    email: "",
+    phone: undefined,
+    address: "",
+    corte: "",
+    silla: 0,
+  });
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Call the emailnotif API using axios
+    try {
+      await axios.post("/api/Emailnotif", formData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
     return (
       <BookingCard>
@@ -128,7 +141,7 @@ const DetailsComponent = memo(
             >
               <div className="flex flex-row items-baseline gap-1 ">
                 {/* <label className="label flex-shrink">Name</label> */}
-                <Input type="text" id="name" placeholder="nombre" required />
+                <Input type="text" id="name" placeholder="nombre" required onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
               </div>
               <div className="flex flex-row items-baseline gap-1 ">
                 {/* <label className="label flex-shrink">Email</label> */}
@@ -138,11 +151,16 @@ const DetailsComponent = memo(
                   placeholder="email"
                   required
                   autoComplete="email"
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
               <div className="flex flex-row items-baseline gap-1 ">
                 {/* <label className="label flex-shrink">Phone</label> */}
-                <PhoneNumberInput className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+                <PhoneNumberInput
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" 
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e })}
+                />
               </div>
               {/* This could be for barbers or home services 
             also it can be the location of the shop*/}
@@ -154,35 +172,45 @@ const DetailsComponent = memo(
             /> */}
               <div className="flex flex-col items-baseline gap-1 ">
                 <Label className="label flex-shrink">Corte</Label>
-                <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  flex-grow">
-                  <option>Recorte y Barba</option>
+                <select 
+                 onChange={(e) => setFormData({ ...formData, corte: e.target.value })}
+                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  flex-grow"
+                >
+                  <option
+                    value={"Recorte y Barba"}
+                  >
+                    Recorte y Barba
+                  </option>
                   <hr />
-                  <option>Refinado</option>
-                  <option>Solo Recorte</option>
+                  <option value={"Refinado"}>Refinado</option>
+                  <option value={"Solo Recorte"}>Solo Recorte</option>
                 </select>
               </div>
               <div className="flex flex-col items-baseline gap-1 ">
                 <Label className="label flex-shrink">Barbero</Label>
-                <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-grow">
+                <select
+                  onChange={(e) => setFormData({ ...formData, silla: parseInt(e.target.value) })}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-grow"
+                >
                   <option value="n/a">Selecciona Uno</option>
                   <hr className=" bg-background/80" />
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
+                  <option value={"1"}>1</option>
+                  <option value={"2"}>2</option>
+                  <option value={"3"}>3</option>
                 </select>
+              </div>
+              <div className="w-full flex items-center justify-center py-6">
+                <GoBackButton onClick={() => setState("booking")} />
+                <Button
+                  type="submit"
+                  // onClick={() => setState("confirmation")}
+                  className="button scale-95 hover:scale-105 duration-200 ease-in-out"
+                >
+                  confirmation
+                </Button>
               </div>
             </form>
           </section>
-          <div className="w-full flex items-center justify-center py-6">
-            <GoBackButton onClick={() => setState("booking")} />
-            <Button
-              type="submit"
-              onClick={() => setState("confirmation")}
-              className="button scale-95 hover:scale-105 duration-200 ease-in-out"
-            >
-              confirmation
-            </Button>
-          </div>
         </CardContent>
       </BookingCard>
     );
