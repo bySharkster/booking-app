@@ -21,6 +21,7 @@ import GoBackButton from "./ui/goBack";
 import { E164Number } from "libphonenumber-js/core";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import { Test } from "./ui/Test/Test";
 
 type formDataProps = {
   name: string;
@@ -32,7 +33,7 @@ type formDataProps = {
 };
 
 export const Booking = () => {
-  const [state, setState] = useState("booking");
+  const [state, setState] = useState("test");
   const renderComponent = useCallback(() => {
     switch (state) {
       case "details":
@@ -41,6 +42,8 @@ export const Booking = () => {
         return <ConfirmationComponent />;
       case "booking":
         return <BookingComponent setState={setState} />;
+      case "test":
+        return <Test />;
       default:
         return <BookingComponent setState={setState} />;
     }
