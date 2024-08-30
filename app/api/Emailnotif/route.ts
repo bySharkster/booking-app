@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(req: Request) {
   try {
-    const { name, email, phone, corte, silla } = await req.json();
+    const { name, email, phone, corte, silla, reservationId } = await req.json();
 
     const mailOptions = {
     from: 'gregor.gr20@gmail.com',
@@ -19,7 +19,8 @@ export async function POST(req: Request) {
     text: `You got an order from ${name} \n
      his email is: ${email} & his phone
      number:${phone} \n \n
-     he wants ${corte} & wants barber #${silla}.`,
+     he wants ${corte} & wants barber #${silla}. \n \n
+     The reservation id is: ${reservationId}`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {

@@ -14,12 +14,12 @@ export const Test = () => {
     };
   }, []);
 
-  const getRemainingHours = () => {
-    const now = new Date();
-    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-    const diff = endOfDay.getTime() - now.getTime();
-    return Math.floor(diff / (1000 * 60 * 60));
-  };
+  // const getRemainingHours = () => {
+  //   const now = new Date();
+  //   const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+  //   const diff = endOfDay.getTime() - now.getTime();
+  //   return Math.floor(diff / (1000 * 60 * 60));
+  // };
 
   const generateHourButtons = () => {
     const buttons = [];
@@ -64,9 +64,9 @@ export const Test = () => {
           {selectedHour !== null && (
             <p className="mt-4 text-white">You selected: {selectedHour.toString().padStart(2, '0')}:00</p>
           )}
-          <div className="bg-white p-2 rounded-md shadow-md inline-block">
+          {/* <div className="bg-white p-2 rounded-md shadow-md inline-block">
             <p className="font-bold text-black">Remaining hours in the day: {getRemainingHours()}</p>
-          </div>
+          </div> */}
         </section>
       </CardContent>
     </BookingCard>
