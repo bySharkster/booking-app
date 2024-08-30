@@ -33,7 +33,7 @@ type formDataProps = {
 };
 
 export const Booking = () => {
-  const [state, setState] = useState("test");
+  const [state, setState] = useState("booking");
   const renderComponent = useCallback(() => {
     switch (state) {
       case "details":
@@ -131,7 +131,7 @@ const DetailsComponent = memo(({ setState }: { setState: (state: string) => void
     email: "",
     phone: undefined,
     address: "",
-    corte: "",
+    corte: "Recorte y Barba",
     silla: 0,
   });
 
@@ -160,7 +160,13 @@ const DetailsComponent = memo(({ setState }: { setState: (state: string) => void
             >
               <div className="flex flex-row items-baseline gap-1 ">
                 {/* <label className="label flex-shrink">Name</label> */}
-                <Input type="text" id="name" placeholder="nombre" required onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                <Input
+                  type="text"
+                  id="name"
+                  placeholder="nombre"
+                  required
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                />
               </div>
               <div className="flex flex-row items-baseline gap-1 ">
                 {/* <label className="label flex-shrink">Email</label> */}
@@ -181,7 +187,7 @@ const DetailsComponent = memo(({ setState }: { setState: (state: string) => void
                 onChange={(e) => setFormData({ ...formData, phone: e })}
                 />
               </div>
-              {/* This could be for barbers or home services 
+              {/* This could be for barbers or home services
             also it can be the location of the shop*/}
               {/* <label className="label">Address</label>
             <input
@@ -191,7 +197,7 @@ const DetailsComponent = memo(({ setState }: { setState: (state: string) => void
             /> */}
               <div className="flex flex-col items-baseline gap-1 ">
                 <Label className="label flex-shrink">Corte</Label>
-                <select 
+                <select
                  onChange={(e) => setFormData({ ...formData, corte: e.target.value })}
                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  flex-grow"
                 >
