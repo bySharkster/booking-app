@@ -10,20 +10,32 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "../card";
 import { cn } from "@/lib/utils";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import PhoneNumberInput from "./ui/phoneNumberInput";
-import BookingCard from "./ui/bookingCard";
-import { TimePicker } from "./ui/timePicker";
-import GoBackButton from "./ui/goBack";
+import { Input } from "../input";
+import { Label } from "../label";
+import PhoneNumberInput from "../phoneNumberInput";
+import BookingCard from "../bookingCard";
+import { TimePicker } from "../timePicker";
+import GoBackButton from "../goBack";
 import { E164Number } from "libphonenumber-js/core";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-import { Test } from "./ui/Test/Test";
+import { Test } from "../Test/Test";
 import { v4 as uuidv4 } from "uuid";
+import { Loader } from "../Loader/Loader";
+import ApiCalendar from "react-google-calendar-api";
 
+const config = {
+  clientId: "756308670580-d2dj05osqdql79isa8udjm6fnget117o.apps.googleusercontent.com",
+  apiKey: "AIzaSyDVNZGmNYCzQxTbKHSb9WtjsNfZn6FWlEU",
+  scope: "https://www.googleapis.com/auth/calendar",
+  discoveryDocs: [
+    "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
+  ],
+};
+
+const apiCalendar = new ApiCalendar(config);
 // types for each component
 type formDataProps = {
   name: string;
@@ -45,18 +57,6 @@ type BookingProps = {
   setTime: React.Dispatch<React.SetStateAction<string | undefined>>;
 };
 
-type confirmationProps = {
-  date: Date;
-  // time: string;
-  // name: string;
-  // email: string;
-  // phone: E164Number | undefined;
-  // address: string;
-  // corte: string;
-  // silla: number;
-  reservationId: string;
-};
-
 type DetailsProps = {
   setState: (state: string) => void;
   formData: formDataProps;
@@ -64,7 +64,7 @@ type DetailsProps = {
 };
 
 export const Booking = () => {
-  const [state, setState] = useState("booking");
+  const [state, setState] = useState("details");
 
   // moved date logic to the parent component to be able to use it in the confirmation component
   const today = useMemo(() => new Date(), []);
@@ -89,7 +89,7 @@ export const Booking = () => {
       case "details":
         return <DetailsComponent setState={setState} formData={formData} setFormData={setFormData} />;
       case "confirmation":
-        return <ConfirmationComponent date={date || new Date()} reservationId={formData.reservationId} />;
+        return <Loader />;
       case "booking":
         return <BookingComponent setState={setState} today={today} tomorrow={tomorrow} date={date} time={time} setDate={setDate} setTime={setTime} />;
       case "test":
@@ -102,8 +102,7 @@ export const Booking = () => {
   return <div className="grid">{renderComponent()}</div>;
 };
 
-const BookingComponent = memo(
-  ({ setState, today, tomorrow, date, time, setDate, setTime }: BookingProps) => {
+const BookingComponent = memo(({ setState, today, tomorrow, date, time, setDate, setTime }: BookingProps) => {
 
     tomorrow.setDate(today.getDate() + 1);
 
@@ -168,7 +167,6 @@ const BookingComponent = memo(
             </div>
           </CardContent>
         </BookingCard>
-        <Test />
       </div>
     );
   }
@@ -178,15 +176,30 @@ BookingComponent.displayName = "BookingComponent";
 
 const DetailsComponent = memo(({ setState, formData, setFormData }: DetailsProps) => {
 
+    const handleSubmit = async() => {
+      // Call the emailnotif API using axios
+      try {
+        // use the google calendar api
+        apiCalendar.createEvent({
+          // summary: "Corte de Pelo",
+          // description: `Corte: ${formData.corte} - Barbero: ${formData.silla}`,
+          start: {
+            dateTime: new Date().toISOString(),
+            timeZone: "America/Puerto_Rico",
+            },
+          end: {
+            dateTime: new Date().toISOString(),
+            timeZone: "America/Puerto_Rico",
+            },
+        });
 
-  const handleSubmit = async() => {
-    // Call the emailnotif API using axios
-    try {
-      await axios.post("/api/Emailnotif", formData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+        // Send the reservationId to the emailnotif API
+        // await axios.post("/api/Emailnotif", formData);
+        // window.location.href = `/confirm/${formData.reservationId}`;
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     return (
       <BookingCard>
@@ -242,8 +255,8 @@ const DetailsComponent = memo(({ setState, formData, setFormData }: DetailsProps
               <div className="flex flex-col items-baseline gap-1 ">
                 <Label className="label flex-shrink">Corte</Label>
                 <select
-                 onChange={(e) => setFormData({ ...formData, corte: e.target.value })}
-                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  flex-grow"
+                  onChange={(e) => setFormData({ ...formData, corte: e.target.value })}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  flex-grow"
                 >
                   <option
                     value={"Recorte y Barba"}
@@ -275,6 +288,7 @@ const DetailsComponent = memo(({ setState, formData, setFormData }: DetailsProps
                   onClick={() => {
                     handleSubmit();
                     setState("confirmation");
+                    // window.location.href = `/confirm/${formData.reservationId}`;
                   }}
                   className="button scale-95 hover:scale-105 duration-200 ease-in-out"
                 >
@@ -290,69 +304,3 @@ const DetailsComponent = memo(({ setState, formData, setFormData }: DetailsProps
 );
 
 DetailsComponent.displayName = "DetailsComponent";
-
-const ConfirmationComponent = memo(({ date, reservationId } : confirmationProps) => {
-  return (
-    <BookingCard>
-      <CardContent className="w-full max-w-fit mx-auto px-1">
-        <section className="border-2 rounded-xl border-slate-200 bg-card-foreground items-center flex flex-col justify-center text-black">
-          <div className="flex items-center justify-between w-full sm:w-4/5 md:max-w-lg max-w-80 mb-4 z-[2] md:px-4 px-1 pt-6 ">
-            <div className="text-sm text-muted-foreground">
-              <div>Reservation made</div>
-              <div>Tomorrow at {date.getHours()}</div>
-            </div>
-            <div className="bg-primary text-primary-foreground md:px-3 p-1 rounded-full text-xs font-medium">
-              Confirmed
-            </div>
-          </div>
-          <div className="text-center z-[2] md:px-6 ">
-            <h2 className="text-xl md:text-2xl font-bold mb-2 ">
-              Your reservation is confirmed!
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              We&apos;re looking forward to seeing you in our Barber Shop.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-4 mb-6 z-[2] px-4 md:px-12 mx-auto">
-            <div>
-              <div className="text-sm text-muted-foreground mb-1">Date</div>
-              <div className="font-medium">{date.toDateString()}</div>
-            </div>
-            <div>
-              <div className="text-sm text-muted-foreground mb-1">Barber</div>
-              <div className="font-medium">Johny Joe</div>
-            </div>
-            <div>
-              <div className="text-sm text-muted-foreground mb-1">Location</div>
-              <div className="font-medium">A la derecha, Arroyo Puerto Rico</div>
-            </div>
-            <div>
-              <div className="text-sm text-muted-foreground mb-1">
-                Reservation ID
-              </div>
-              <div className="font-medium">{reservationId}</div>
-            </div>
-          </div>
-          <div className="flex justify-center flex-col sm:flex-row w-full z-[2] px-6 pb-6 gap-2">
-            <Button
-              variant={"default"}
-              size={"lg"}
-              className="bg-background hover:bg-background/75 text-foreground  hover:text-foreground/75"
-            >
-              View Details
-            </Button>
-            <Button
-              variant={"default"}
-              size={"lg"}
-              className="bg-foreground hover:bg-foreground/75 text-background hover:text-background/75"
-            >
-              Share Receipt
-            </Button>
-          </div>
-        </section>
-      </CardContent>
-    </BookingCard>
-  );
-});
-
-ConfirmationComponent.displayName = "ConfirmationComponent";

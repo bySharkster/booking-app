@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
     const mailOptions = {
     from: 'gregor.gr20@gmail.com',
-    to: 'fernandoaponte0609@gmail.com',
+    to: 'gregor.gr20@gmail.com',
     subject: 'A client booked a haircut',
     text: `You got an order from ${name} \n
      his email is: ${email} & his phone
