@@ -6,7 +6,7 @@ import { DayPicker } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import TimePicker from "./timePicker";
+import { TimePicker } from "./timePicker";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -16,10 +16,13 @@ function Calendar({
   showOutsideDays = false,
   ...props
 }: CalendarProps) {
+  const today = new Date();
+  const tomorrow: Date = new Date();
+  tomorrow.setDate(today.getDate() + 1);
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      disabled={{ before: new Date() }}
+      disabled={{ before: tomorrow }}
       className={cn("p-3", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
